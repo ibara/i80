@@ -11,6 +11,7 @@ Short list of missing features:
 * Lots of CP/M BDOS routines
 * Filesystem handling
 * Bug-free experience
+* Would be nice to emulate a Z80
 
 You are welcome to implement any/all of these.
 
