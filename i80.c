@@ -1520,28 +1520,28 @@ main(int argc, char *argv[])
 	while (execute(&i80, ram[i80.pc++])) {
 		if (port == 0) {
 			switch (i80.c) {
-			case 0:
+			case 0:		/* P_TERMCPM */
 				goto out;
-			case 1:
+			case 1:		/* C_READ */
 				while (read(0, &i80.l, 1) < 1)
 					;
 				i80.a = i80.l;
 				write(1, &i80.a, 1);
 				break;
-			case 2:
+			case 2:		/* C_WRITE */
 				write(1, &i80.e, 1);
 				break;
-			case 3:
+			case 3:		/* A_READ */
 				i80.l = 0;
 				i80.a = i80.l;
 				break;
-			case 4:
+			case 4:		/* A_WRITE */
 				write(2, &i80.e, 1);
 				break;
-			case 5:
+			case 5:		/* L_WRITE */
 				write(2, &i80.e, 1);
 				break;
-			case 6:
+			case 6:		/* C_RAWIO */
 				fd = fcntl(0, F_GETFL);
 				fcntl(0, F_SETFL, fd | O_NONBLOCK);
 				if (read(0, &i80.l, 1) < 1)
@@ -1549,16 +1549,16 @@ main(int argc, char *argv[])
 				fcntl(0, F_SETFL, fd & ~(O_NONBLOCK));
 				i80.a = i80.l;
 				break;
-			case 7:
+			case 7:		/* Get I/O byte */
 				break;
-			case 8:
+			case 8:		/* Set I/O byte */
 				break;
-			case 9:
+			case 9:		/* C_WRITESTR */
 				addr = (i80.d << 8) | i80.e;
 				while (ram[addr] != '$')
 					write(1, &ram[addr++], 1);
 				break;
-			case 10:
+			case 10:	/* C_READSTR */
 				addr = (i80.d << 8) | i80.e;
 				size = ram[addr];
 				save = addr++;
@@ -1581,6 +1581,17 @@ main(int argc, char *argv[])
 
 				addr = addr - save + 1;
 				ram[save + 1] = addr & 0xff;
+
+				break;
+			case 12:	/* S_BDOSVER */
+				i80.h = 0;
+				i80.b = i80.h;
+
+				i80.l = 0x22;
+				i80.a = i80.l;
+				break;
+			case 25:	/* DRV_GET */
+				i80.a = 0;
 			}
 
 			port = -1;
