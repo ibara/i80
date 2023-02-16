@@ -1,7 +1,7 @@
-# i80 Makefile
+# z80 Makefile
 
-PROG =	i80
-OBJS =	i80.o
+PROG =	z80
+OBJS =	z80.o
 
 all: ${OBJS}
 	${CC} ${LDFLAGS} -o ${PROG} ${OBJS}
